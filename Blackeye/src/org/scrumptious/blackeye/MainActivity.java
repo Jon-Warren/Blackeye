@@ -185,4 +185,5 @@ class MyParser {
     private static XmlPullParser XML_PARSER;
     private URL url = null;
     private String node,content;
+    public Playback audioPlayer;
 }
