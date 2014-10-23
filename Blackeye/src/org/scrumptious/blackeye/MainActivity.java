@@ -1,6 +1,7 @@
 package org.scrumptious.blackeye;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,27 +29,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        parsers.add(new MyParser("http://www.npr.org/rss/podcast.php?id=510298",true));
-        for(MyParser parser : parsers) {
-            if(parser.getTitle() != null) {
-                LinearLayout view = (LinearLayout)findViewById(R.id.mainLinear);
-                RelativeLayout child = new RelativeLayout(this);
-                TextView tv = new TextView(this);
-                Button btn = new Button(this);
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)tv.getLayoutParams();
-                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                tv.setLayoutParams(params);
-                tv.setText(parser.getTitle());
-
-                params = (RelativeLayout.LayoutParams)btn.getLayoutParams();
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                btn.setLayoutParams(params);
-                btn.setText("Watch");
-                child.addView(tv);
-                child.addView(btn);
-                view.addView(child);
-            }
-        }
+        new CastParser("http://www.sciencefriday.com/audio/scifriaudio.xml").execute();
     }
 
 
@@ -78,21 +60,23 @@ class MyParser {
     private static boolean DEBUG_MODE = true;
 
     public MyParser(String URL, boolean debug) {
+    	XmlDownloader dl = new XmlDownloader(URL);
+    	dl.execute();
         try {
             this.DEBUG_MODE = debug;
-            if(DEBUG_MODE) System.out.print("Retrieving file..... ");
+            if(DEBUG_MODE) Log.d("Parser","Retrieving file..... ");
             if(!URL.contains("http"))
                 this.url = new File(URL).toURI().toURL();
             else
                 this.url = new URL(URL);
-            InputStream inputStream = url.openStream();
+            InputStream inputStream = dl.getStream();
             XML_PARSER.setInput(new BufferedReader(new InputStreamReader(inputStream)));
-            if(DEBUG_MODE) System.out.println(" Done!");
+            if(DEBUG_MODE) Log.d("Parser"," Done!");
             fillMap();
         } catch (Exception e) {
         }
         if(DEBUG_MODE) {
-            for(String item : nodes.keySet()) System.out.println(item + " | " + nodes.get(item));
+            for(String item : nodes.keySet()) Log.d("Parser",item + " | " + nodes.get(item));
         }
     }
 
@@ -147,23 +131,62 @@ class MyParser {
             Log.e("ParserError","Parser could not be loaded");
         }
         if(args.length == 0) {
-            System.out.println("Wow, give me an XML please.");
+            Log.d("Parser","Wow, give me an XML please.");
             return;
         }
         if(!args[0].contains(".xml") && !args[0].contains("http")) {
-            System.out.println("Not an XML file");
+            Log.d("Parser","Not an XML file");
             return;
         }
         if(args.length == 2)
             mp = new MyParser(args[0],args[1].equalsIgnoreCase("-Debug"));
         else
             mp = new MyParser(args[0],false);
-        System.out.println("WowParser - Tyler Garcia \n");
-        System.out.println(mp.toString());
+        Log.d("Parser","WowParser - Tyler Garcia \n");
+        Log.d("Parser",mp.toString());
     }
     public static MyParser mp;
     public static final HashMap<String,String> nodes = new HashMap<String, String>();
     private static XmlPullParser XML_PARSER;
     private URL url = null;
     private String node,content;
+    
+    private class XmlDownloader extends AsyncTask<String, Void, String> {
+    	private InputStream iStream;
+    	private String URL;
+    	
+    	public XmlDownloader(String u) {
+    		this.URL = u;
+    	}
+    	
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			try {
+				iStream = downloadUrl(URL);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				iStream = null;
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		public InputStream getStream() {
+			return this.iStream;
+		}
+		
+		private InputStream downloadUrl(String urlString) throws IOException {
+		    URL url = new URL(urlString);
+		    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		    conn.setReadTimeout(10000 /* milliseconds */);
+		    conn.setConnectTimeout(15000 /* milliseconds */);
+		    conn.setRequestMethod("GET");
+		    conn.setDoInput(true);
+		    // Starts the query
+		    conn.connect();
+		    return conn.getInputStream();
+		}
+    	
+    }
 }
