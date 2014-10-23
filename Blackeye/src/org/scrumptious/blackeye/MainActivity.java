@@ -26,12 +26,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        Log.e("rand","meh");
         MyParser p = new MyParser("http://www.npr.org/rss/podcast.php?id=510298",true);
-        while(!p.isDone) {
-        	
-        }
+     
+        
         Log.d("Main","Adding parser"+p.getTitle());
         parsers.add(p);
         for(MyParser parser : parsers) {
@@ -79,11 +76,13 @@ public class MainActivity extends Activity {
 /**
  * Created by Tyler on 9/23/2014.
  */
-class MyParser {
+class MyParser implements Runnable {
     private static boolean DEBUG_MODE = true;
     public static boolean isDone = false;
-
-    public MyParser(String URL, boolean debug) {
+    private String URL;
+    private boolean debug;
+    
+    public void run() {
     	try {
             XML_PARSER = XmlPullParserFactory.newInstance().newPullParser();
         } catch(Exception e) {
@@ -97,11 +96,13 @@ class MyParser {
             else
                 this.url = new URL(URL);
             InputStream inputStream = url.openStream();
-            inputStream.read();
+            Log.d("Parser","Size: "+inputStream.available());
             XML_PARSER.setInput(new BufferedReader(new InputStreamReader(inputStream)));
             if(DEBUG_MODE) Log.e("Parser"," Done!");
             fillMap();
         } catch (Exception e) {
+        	e.printStackTrace();
+        	return;
         }
         if(DEBUG_MODE) {
             for(String item : nodes.keySet()) Log.e("Parser",item + " | " + nodes.get(item));
@@ -116,6 +117,11 @@ class MyParser {
 			e.printStackTrace();
 		}
         isDone = true;
+        Thread.currentThread().interrupt();
+    }
+    public MyParser(String URL, boolean debug) {
+    	this.URL = URL;
+    	this.debug = debug;
     }
 
     /**
