@@ -7,10 +7,15 @@ public class Playback {
 	
 	private MediaPlayer mediaPlayer;
 	
-	public void playAudio(String url) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
+	public Playback() {
 		mediaPlayer = new MediaPlayer();
-	    mediaPlayer.setDataSource(url);
-	    mediaPlayer.prepare();
+	}
+	
+	public void playAudio(String url) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
+		mediaPlayer.reset();
+		mediaPlayer.setDataSource(url);
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mediaPlayer.prepare();
 	    mediaPlayer.start();
 	}
 	

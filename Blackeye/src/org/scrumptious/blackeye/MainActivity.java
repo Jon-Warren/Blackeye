@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -83,7 +84,7 @@ public class MainActivity extends Activity {
                        	
                        	Cast c = CastParser.podcasts.get(parserKey);
                        	
-                       	Button button = new Button(MainActivity.this);
+                       	final Button button = new Button(MainActivity.this);
                        	//TextView text = new TextView(MainActivity.this);
                        	LinearLayout layout = new LinearLayout(MainActivity.this);
                        	layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -91,12 +92,31 @@ public class MainActivity extends Activity {
                        	button.setText(c.getTitle());
                        	
                        	button.setOnTouchListener(new OnTouchListener() {
-
 							@Override
 							public boolean onTouch(View arg0, MotionEvent arg1) {
 								// TODO Auto-generated method stub
 								Cast cast = CastParser.podcasts.get(((Button)arg0).getText());
 								cast.getURL();
+								System.out.println(cast.getURL().substring(9));
+								File mSavePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+								File file = new File(mSavePath+"/" + cast.getURL());
+								Playback myPlayer = new Playback();
+								try {
+									
+									myPlayer.playAudio(cast.getURL().substring(9));
+								} catch (IllegalArgumentException e) {
+									// TODO Auto-generated catch block
+									//e.printStackTrace();
+								} catch (SecurityException e) {
+									// TODO Auto-generated catch block
+									//e.printStackTrace();
+								} catch (IllegalStateException e) {
+									// TODO Auto-generated catch block
+									//e.printStackTrace();
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									//e.printStackTrace();
+								}
 								//MATT EDIT THE CODE HERE!
 								return false;
 							}
