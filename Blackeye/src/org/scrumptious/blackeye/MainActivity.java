@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -32,12 +33,12 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends Activity {
     public static final ArrayList<CastParser> parsers = new ArrayList<CastParser>();
     private static final ArrayList<String> feedURLS = new ArrayList<String>();
-    LinearLayout linearLayout;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        linearLayout = new LinearLayout(this);
+        final LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         CastParser x = new CastParser("http://www.sciencefriday.com/audio/scifriaudio.xml");
         //Log.d("Hihi","Next");
@@ -61,7 +62,6 @@ public class MainActivity extends Activity {
                       // here you can add functions
                 	   feedURLS.add(box.getText().toString());
                 	   CastParser parser = new CastParser(box.getText().toString());
-                	   Log.d("hi","hi");
                 	   parser.execute();
                 	   try {
 						parser.get();
@@ -74,21 +74,39 @@ public class MainActivity extends Activity {
 					}
                 	   
                 	   parsers.add(parser);
-                	   linearLayout = new LinearLayout(MainActivity.this);
+                	   linearLayout.removeAllViews();
+                	   //linearLayout.removeView(btn);
+                	   //linearLayout = new LinearLayout(MainActivity.this);
+                	   
                 	   linearLayout.addView(btn);
                 	   for(String parserKey : CastParser.podcasts.keySet()) {
                        	
                        	Cast c = CastParser.podcasts.get(parserKey);
-                       	Log.d("Cast",c.getTitle());
+                       	
                        	Button button = new Button(MainActivity.this);
-                       	TextView text = new TextView(MainActivity.this);
+                       	//TextView text = new TextView(MainActivity.this);
                        	LinearLayout layout = new LinearLayout(MainActivity.this);
                        	layout.setOrientation(LinearLayout.HORIZONTAL);
-                       	text.setText(c.getTitle());
-                       	button.setText("Watch");
-                       	layout.addView(text);
+                       	//text.setText(c.getTitle());
+                       	button.setText(c.getTitle());
+                       	
+                       	button.setOnTouchListener(new OnTouchListener() {
+
+							@Override
+							public boolean onTouch(View arg0, MotionEvent arg1) {
+								// TODO Auto-generated method stub
+								Cast cast = CastParser.podcasts.get(((Button)arg0).getText());
+								cast.getURL();
+								//MATT EDIT THE CODE HERE!
+								return false;
+							}
+                       		
+                       	});
+                       	//layout.addView(text);
                        	layout.addView(button);
                        	linearLayout.addView(layout);
+                       	Log.d("Cast",c.getTitle());
+                       	//setContentView(linearLayout);
                        }
                 	   setContentView(linearLayout);
                    }
