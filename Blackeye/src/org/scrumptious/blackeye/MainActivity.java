@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import org.xmlpull.v1.XmlPullParser;
@@ -97,6 +98,7 @@ public class MainActivity extends Activity {
 								// TODO Auto-generated method stub
 								Cast cast = CastParser.podcasts.get(((Button)arg0).getText());
 								cast.getURL();
+								Toast.makeText(MainActivity.this, cast.getURL(), 30000).show();
 								//MATT EDIT THE CODE HERE!
 								return false;
 							}
