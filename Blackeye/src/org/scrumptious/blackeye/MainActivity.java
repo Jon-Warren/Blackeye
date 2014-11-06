@@ -3,15 +3,18 @@ package org.scrumptious.blackeye;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -53,6 +56,7 @@ public class MainActivity extends Activity {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				// TODO Auto-generated method stubr6
+				if(arg1.getAction() != MotionEvent.ACTION_DOWN) return false;
 				AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this); //Read Update
                 alertDialog.setTitle("Add Feed");
                 alertDialog.setMessage("Enter feed URL");
@@ -77,34 +81,49 @@ public class MainActivity extends Activity {
                 	   
                 	   parsers.add(parser);
                 	   linearLayout.removeAllViews();
-                	   //linearLayout.removeView(btn);
-                	   //linearLayout = new LinearLayout(MainActivity.this);
-                	   
+
                 	   linearLayout.addView(btn);
                 	   for(String parserKey : CastParser.podcasts.keySet()) {
                        	
                        	Cast c = CastParser.podcasts.get(parserKey);
                        	
                        	final Button button = new Button(MainActivity.this);
-                       	//TextView text = new TextView(MainActivity.this);
+                       	TextView text = new TextView(MainActivity.this);
                        	LinearLayout layout = new LinearLayout(MainActivity.this);
-                       	layout.setOrientation(LinearLayout.HORIZONTAL);
-                       	//text.setText(c.getTitle());
-                       	button.setText(c.getTitle());
-                       	
+                       //	layout.setOrientation(LinearLayout.HORIZONTAL);
+                       	//layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+                       	text.setText(c.getTitle());
+                       	button.setText("Play");
+                       	button.setHint(c.getTitle());
+                       	LinearLayout.LayoutParams rightGravityParams = new LinearLayout.LayoutParams(
+                                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        rightGravityParams.gravity = Gravity.RIGHT;
+                        button.setLayoutParams(rightGravityParams);
+                       	text.setGravity(RelativeLayout.ALIGN_PARENT_LEFT);
                        	button.setOnTouchListener(new OnTouchListener() {
 							@Override
 							public boolean onTouch(View arg0, MotionEvent arg1) {
 								// TODO Auto-generated method stub
-								Cast cast = CastParser.podcasts.get(((Button)arg0).getText());
-								cast.getURL();
-								System.out.println(cast.getURL().substring(9));
+								Cast cast = CastParser.podcasts.get(((Button)arg0).getHint());
+								
+								//System.out.println(cast.getURL().substring(9));
 								File mSavePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
 								File file = new File(mSavePath+"/" + cast.getURL());
 								Playback myPlayer = new Playback();
 								try {
-									
-									myPlayer.playAudio(cast.getURL().substring(9));
+									if(arg1.getAction() == MotionEvent.ACTION_DOWN) {
+										if(!cast.isStarted()) {
+											//myPlayer.playAudio(cast.getURL().substring(9));
+											startActivity(cast.getURL());
+											button.setText("Stop");
+										} else {
+											myPlayer.stop();
+											cast.stop();
+											button.setText("Play");
+										}
+										return true;
+									}
+											
 								} catch (IllegalArgumentException e) {
 									// TODO Auto-generated catch block
 									//e.printStackTrace();
@@ -114,16 +133,13 @@ public class MainActivity extends Activity {
 								} catch (IllegalStateException e) {
 									// TODO Auto-generated catch block
 									//e.printStackTrace();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									//e.printStackTrace();
 								}
 								//MATT EDIT THE CODE HERE!
 								return false;
 							}
                        		
                        	});
-                       	//layout.addView(text);
+                       	layout.addView(text);
                        	layout.addView(button);
                        	linearLayout.addView(layout);
                        	Log.d("Cast",c.getTitle());
@@ -134,7 +150,7 @@ public class MainActivity extends Activity {
                 });
                 
                 alertDialog.create().show();	
-				return false;
+				return true;
 			}
 
         });
@@ -148,6 +164,13 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         return true;
+    }
+    
+    private void startActivity(String url) {
+    	Intent i = new Intent(this,FeedActivity.class);
+    	i.putExtra("feedUrl", url);
+    	startActivity(i);
+
     }
 
     @Override

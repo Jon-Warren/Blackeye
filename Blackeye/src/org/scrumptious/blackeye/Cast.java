@@ -110,6 +110,18 @@ public class Cast extends Podcast {
 		this.duration = string;
 	}
 	
+	public void start() {
+		this.isStarted = true;
+	}
+	
+	public void stop() {
+		this.isStarted = false;
+	}
+	
+	public boolean isStarted() {
+		return this.isStarted;
+	}
+	
 	private String title,url,description,date,author,summary,subtitle,keywords,duration;
-
+	private boolean isStarted = false;
 }

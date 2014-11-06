@@ -19,4 +19,8 @@ public class Playback {
 	    mediaPlayer.start();
 	}
 	
+	public void stop() {
+		mediaPlayer.stop();
+	}
+	
 }

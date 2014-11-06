@@ -28,6 +28,7 @@ public class CastParser extends AsyncTask {
 
 	
 	public void readXML() throws Exception{
+		
 		try {
 		while(xmlParser.nextTag() != -1) {
 			if(xmlParser.getName().contains("owner")) {
@@ -146,6 +147,7 @@ public class CastParser extends AsyncTask {
 		for(String i : podcasts.keySet()) {
 			//Log.d("Podcast",i);
 		}
+		
 	}
 
 	@Override
