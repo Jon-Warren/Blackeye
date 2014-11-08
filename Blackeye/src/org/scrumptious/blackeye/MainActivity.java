@@ -27,9 +27,15 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.text.SimpleDateFormat;
 
 
 public class MainActivity extends Activity {
@@ -80,53 +86,86 @@ public class MainActivity extends Activity {
                 	   //linearLayout.removeView(btn);
                 	   //linearLayout = new LinearLayout(MainActivity.this);
                 	   
-                	   linearLayout.addView(btn);
-                	   for(String parserKey : CastParser.podcasts.keySet()) {
-                       	
-                       	Cast c = CastParser.podcasts.get(parserKey);
-                       	
-                       	final Button button = new Button(MainActivity.this);
-                       	//TextView text = new TextView(MainActivity.this);
-                       	LinearLayout layout = new LinearLayout(MainActivity.this);
-                       	layout.setOrientation(LinearLayout.HORIZONTAL);
-                       	//text.setText(c.getTitle());
-                       	button.setText(c.getTitle());
-                       	
-                       	button.setOnTouchListener(new OnTouchListener() {
-							@Override
-							public boolean onTouch(View arg0, MotionEvent arg1) {
-								// TODO Auto-generated method stub
-								Cast cast = CastParser.podcasts.get(((Button)arg0).getText());
-								//cast.getURL();
-								//System.out.println(cast.getURL().substring(9));
-								//File mSavePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-								//File file = new File(mSavePath+"/" + cast.getURL());
-								Playback myPlayer = new Playback();
-								try {
-									
-									myPlayer.playAudio(cast.getTitle(), cast.getParentName());
-								} catch (IllegalArgumentException e) {
-									// TODO Auto-generated catch block
-									//e.printStackTrace();
-								} catch (SecurityException e) {
-									// TODO Auto-generated catch block
-									//e.printStackTrace();
-								} catch (IllegalStateException e) {
-									// TODO Auto-generated catch block
-									//e.printStackTrace();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									//e.printStackTrace();
-								}
-								return false;
+                	   
+                	   	//Start of my code for SORTING BY DATE (Matt)
+                	   	ArrayList<Date> dateList = new ArrayList<Date>();
+                	   	for(String parserKey : CastParser.podcasts.keySet()) {
+                		   	Cast c = CastParser.podcasts.get(parserKey);
+                		   	Date d;
+							try {
+								String target = c.getPubDate();
+							    DateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss Z", Locale.ENGLISH);
+							    d =  df.parse(target);
+							    dateList.add(d);
+							    
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-                       		
-                       	});
-                       	//layout.addView(text);
-                       	layout.addView(button);
-                       	linearLayout.addView(layout);
-                       	Log.d("Cast",c.getTitle());
-                       	//setContentView(linearLayout);
+                		   	
+                	   	}
+                	   	Collections.sort(dateList);
+                	   	Collections.reverse(dateList);
+                	   	String[] podcastsSorted = new String[dateList.size()];
+                	   	for(String parserKey : CastParser.podcasts.keySet()) {
+                	   		Date d;
+							try {
+								Cast c = CastParser.podcasts.get(parserKey);
+								String pubDate = c.getPubDate();
+							    DateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss Z", Locale.ENGLISH);
+							    d =  df.parse(pubDate);
+							    for (int index = 0; index < dateList.size(); index++) {
+							    	if (d.equals(dateList.get(index)) && podcastsSorted[index] == null) {
+							    		podcastsSorted[index] = parserKey;
+							    		break;
+							    	}
+							    }								
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+                	   	}
+                	   	//End of my code for SORTING BY DATE (Matt)
+                	   
+                	   	linearLayout.addView(btn);
+                	   	for (int i = 0; i < podcastsSorted.length; i++) {
+                	   		Cast c = CastParser.podcasts.get(podcastsSorted[i]);
+                	   	   
+                	   	// END of my code for sorting by date
+                	 	
+	                       	final Button button = new Button(MainActivity.this);
+	                       	LinearLayout layout = new LinearLayout(MainActivity.this);
+	                       	layout.setOrientation(LinearLayout.HORIZONTAL);
+	                       	
+	                       	button.setText(c.getTitle());
+	                       	button.setOnTouchListener(new OnTouchListener() {
+								@Override
+								public boolean onTouch(View arg0, MotionEvent arg1) {
+									// TODO Auto-generated method stub
+									Cast cast = CastParser.podcasts.get(((Button)arg0).getText());
+									Playback myPlayer = new Playback();
+									try {
+										
+										myPlayer.playAudio(cast.getTitle(), cast.getParentName());
+									} catch (IllegalArgumentException e) {
+										// TODO Auto-generated catch block
+										//e.printStackTrace();
+									} catch (SecurityException e) {
+										// TODO Auto-generated catch block
+										//e.printStackTrace();
+									} catch (IllegalStateException e) {
+										// TODO Auto-generated catch block
+										//e.printStackTrace();
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										//e.printStackTrace();
+									}
+									return false;
+								}
+	                       	});
+	                       	layout.addView(button);
+	                       	linearLayout.addView(layout);
+	                       	Log.d("Cast",c.getTitle());
                        }
                 	   setContentView(linearLayout);
                    }
