@@ -1,8 +1,10 @@
 package org.scrumptious.blackeye;
 
-import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -11,10 +13,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.os.AsyncTask;
-import android.util.Log;
+import android.os.Environment;
 
 public class CastParser extends AsyncTask {
 	
+	private String feedTitle;
 	private String firstUrl;
 	private InputStream inputStream;
 	private XmlPullParser xmlParser;
@@ -23,9 +26,45 @@ public class CastParser extends AsyncTask {
 	public CastParser(String path) {
 		this.firstUrl = path;
 		this.URL = path;
-		
+	}
+	
+	public boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
 	}
 
+	public void downloadPodcast(String mp3Url, String podcastFeed, String episodeTitle) {
+		
+		System.out.println(isExternalStorageWritable());
+		
+		try {
+			//File cacheDir = new File("/sdcard/",podcastFeed);
+			File root = Environment.getExternalStorageDirectory();
+			//if(!cacheDir.exists()) {
+			//	cacheDir.mkdirs();
+			//}
+			File newFile = new File(root, episodeTitle+".mp3");
+			URL url = new URL(mp3Url);
+			InputStream input = new BufferedInputStream(url.openStream());
+			OutputStream output = new FileOutputStream(newFile);
+			byte data[] = new byte[1024];
+			long total = 0;
+			int count=0;
+			while ((count = input.read(data)) != -1) {
+				output.write(data, 0, count);
+			}
+			System.out.println(newFile.getAbsolutePath());
+			input.close();
+			output.close();
+			
+			
+		} catch (Exception e) {}
+	}
+	
+	
 	
 	public void readXML() throws Exception{
 		try {
@@ -52,8 +91,9 @@ public class CastParser extends AsyncTask {
 					}
 					xmlParser.nextTag();
 					xmlParser.require(XmlPullParser.START_TAG,null,"title");
+					feedTitle = xmlParser.nextText();
 					//Log.d("ImageTitle",xmlParser.nextText());
-					xmlParser.nextText();
+					//xmlParser.nextText();
 					xmlParser.require(XmlPullParser.END_TAG,null,"title");
 					xmlParser.nextTag();
 					xmlParser.require(XmlPullParser.START_TAG,null,"link");
@@ -87,6 +127,7 @@ public class CastParser extends AsyncTask {
 						//xmlParser.nextTag();
 					}
 					try {
+						if(cast.getParentName() == null) cast.setParentName(feedTitle);
 						switch(xmlParser.getName()) {
 							case "title":
 								cast.setTitle(xmlParser.nextText());
@@ -107,9 +148,7 @@ public class CastParser extends AsyncTask {
 							case "guid":
 								try {
 									cast.setURL(xmlParser.nextText());
-								} catch(Exception e) {
-									
-								}
+								} catch(Exception e) {}
 								//xmlParser.nextTag();
 								break;
 							case "itunes:summary":
@@ -134,6 +173,7 @@ public class CastParser extends AsyncTask {
 						}
 					} catch(Exception e) {e.printStackTrace();}
 				}
+				downloadPodcast(cast.getURL(), cast.getParentName(), cast.getTitle());
 				podcasts.put(cast.getTitle(), cast);
 			}
             try {

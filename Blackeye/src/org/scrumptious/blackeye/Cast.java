@@ -110,6 +110,18 @@ public class Cast extends Podcast {
 		this.duration = string;
 	}
 	
-	private String title,url,description,date,author,summary,subtitle,keywords,duration;
+	private String title,url,description,date,author,summary,subtitle,keywords,duration,parentName;
+
+	@Override
+	public void setParentName(String string) {
+		// TODO Auto-generated method stub
+		this.parentName = string;
+	}
+
+	@Override
+	public String getParentName() {
+		// TODO Auto-generated method stub
+		return this.parentName;
+	}
 
 }

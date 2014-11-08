@@ -97,14 +97,14 @@ public class MainActivity extends Activity {
 							public boolean onTouch(View arg0, MotionEvent arg1) {
 								// TODO Auto-generated method stub
 								Cast cast = CastParser.podcasts.get(((Button)arg0).getText());
-								cast.getURL();
-								System.out.println(cast.getURL().substring(9));
-								File mSavePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-								File file = new File(mSavePath+"/" + cast.getURL());
+								//cast.getURL();
+								//System.out.println(cast.getURL().substring(9));
+								//File mSavePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+								//File file = new File(mSavePath+"/" + cast.getURL());
 								Playback myPlayer = new Playback();
 								try {
 									
-									myPlayer.playAudio(cast.getURL().substring(9));
+									myPlayer.playAudio(cast.getTitle(), cast.getParentName());
 								} catch (IllegalArgumentException e) {
 									// TODO Auto-generated catch block
 									//e.printStackTrace();
@@ -118,7 +118,6 @@ public class MainActivity extends Activity {
 									// TODO Auto-generated catch block
 									//e.printStackTrace();
 								}
-								//MATT EDIT THE CODE HERE!
 								return false;
 							}
                        		
