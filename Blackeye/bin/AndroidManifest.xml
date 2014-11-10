@@ -27,6 +27,10 @@
             android:name=".FeedActivity"
             android:label="@string/title_activity_feed" >
         </activity>
+        <activity
+            android:name=".Top5Activity"
+            android:label="@string/title_activity_top5" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package org.scrumptious.blackeye;
 
-public class Cast extends Podcast {
+import java.io.Serializable;
+
+public class Cast extends Podcast implements Serializable {
 
 	@Override
 	public String getTitle() {

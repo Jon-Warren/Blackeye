@@ -87,11 +87,13 @@ public class MainActivity extends Activity {
                 	   
                 	   parsers.add(parser);
                 	   linearLayout.removeAllViews();
+                	   linearLayout.addView(btn);
                 	   //linearLayout.removeView(btn);
                 	   //linearLayout = new LinearLayout(MainActivity.this);
                 	   
                 	   
                 	   	//Start of my code for SORTING BY DATE (Matt)
+                	   /*
                 	   	ArrayList<Date> dateList = new ArrayList<Date>();
                 	   	for(String parserKey : CastParser.podcasts.keySet()) {
                 		   	Cast c = CastParser.podcasts.get(parserKey);
@@ -131,7 +133,7 @@ public class MainActivity extends Activity {
                 	   	}
                 	   	//End of my code for SORTING BY DATE (Matt)
                 	   
-                	   	linearLayout.addView(btn);
+                	   	
                 	   	for (int i = 0; i < podcastsSorted.length; i++) {
                 	   		Cast c = CastParser.podcasts.get(podcastsSorted[i]);
                 	   	   
@@ -148,6 +150,7 @@ public class MainActivity extends Activity {
 								@Override
 								public boolean onTouch(View arg0, MotionEvent arg1) {
 									// TODO Auto-generated method stub
+									if(arg1.getAction() != MotionEvent.ACTION_DOWN) return false;
 									Cast cast = CastParser.podcasts.get(((Button)arg0).getText());
 									cast.getURL();
 									System.out.println(cast.getURL().substring(9));
@@ -155,22 +158,12 @@ public class MainActivity extends Activity {
 									File file = new File(mSavePath+"/" + cast.getURL());
 									Playback myPlayer = new Playback();
 									try {
-										
-										myPlayer.playAudio(cast.getURL().substring(9));
-									} catch (IllegalArgumentException e) {
-										// TODO Auto-generated catch block
-										//e.printStackTrace();
-									} catch (SecurityException e) {
-										// TODO Auto-generated catch block
-										//e.printStackTrace();
-									} catch (IllegalStateException e) {
-										// TODO Auto-generated catch block
-										//e.printStackTrace();
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										//e.printStackTrace();
-									}
-									//MATT EDIT THE CODE HERE!
+										Intent i = new Intent(MainActivity.this,FeedActivity.class);
+										startActivity(i);
+										//myPlayer.playAudio(cast.getURL().substring(9));
+									} catch (Exception e) {
+									} 
+									
 									return false;
 								}
 	                       	});
@@ -180,6 +173,31 @@ public class MainActivity extends Activity {
 	                       	Log.d("Cast",c.getTitle());
 	                       	//setContentView(linearLayout);
                        }
+                       */
+                	   ArrayList<String> names = new ArrayList();
+                	   for(String s : CastParser.podcasts.keySet()) {
+                		   Cast c = CastParser.podcasts.get(s);
+                		   if(c != null && !names.contains(c.getTitle())) {
+                			   names.add(c.getTitle());
+                		   }
+                	   }
+                	   for(final String s : names) {
+                		   Button button = new Button(MainActivity.this);
+                		   button.setText(s);
+                		   button.setOnTouchListener(new OnTouchListener() {
+
+							@Override
+							public boolean onTouch(View arg0, MotionEvent arg1) {
+								// TODO Auto-generated method stub
+								if(arg1.getAction() != MotionEvent.ACTION_DOWN) return false;
+								
+								Intent intent = new Intent(MainActivity.this,FeedActivity.class);
+								intent.putExtra("feedName", s);
+								startActivity(intent);
+								return true;
+							}});
+                		   linearLayout.addView(button);
+                	   }
                 	   setContentView(linearLayout);
                    }
                 });
