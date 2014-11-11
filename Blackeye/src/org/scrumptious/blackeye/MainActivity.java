@@ -53,6 +53,7 @@ public class MainActivity extends Activity {
         //setContentView(R.layout.activity_main);
         final LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
+
         
         final Button btn = new Button(this);
         btn.setText("Add Feed");
@@ -73,7 +74,9 @@ public class MainActivity extends Activity {
                       // here you can add functions
                 	   feedURLS.add(box.getText().toString());
                 	   CastParser parser = new CastParser(box.getText().toString());
+                	   Toast.makeText(MainActivity.this, "Downloading", Toast.LENGTH_SHORT).show();
                 	   parser.execute();
+                	   Toast.makeText(MainActivity.this, "Downloading Finished", Toast.LENGTH_SHORT).show();
                 	   try {
 						parser.get();
 					} catch (InterruptedException e) {
