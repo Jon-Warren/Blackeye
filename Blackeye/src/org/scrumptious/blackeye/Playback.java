@@ -1,7 +1,10 @@
 package org.scrumptious.blackeye;
+import java.io.File;
 import java.io.IOException;
-
 import android.media.*;
+import android.os.Environment;
+import android.provider.MediaStore.Audio.Media;
+
 
 public class Playback {
 	
@@ -12,9 +15,10 @@ public class Playback {
 	}
 	
 	public void playAudio(String url) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
+		File root = Environment.getExternalStorageDirectory();
+		File newFile = new File(root, url+".mp3");
 		mediaPlayer.reset();
-		mediaPlayer.setDataSource(url);
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mediaPlayer.setDataSource(newFile.getCanonicalPath());
 		mediaPlayer.prepare();
 	    mediaPlayer.start();
 	}
@@ -23,4 +27,20 @@ public class Playback {
 		mediaPlayer.stop();
 	}
 	
-}
+	public boolean isPlaying() {
+		if(mediaPlayer != null)
+			return mediaPlayer.isPlaying();
+		else
+			return false;
+	}
+
+	public void pause() {
+		// TODO Auto-generated method stub
+		mediaPlayer.pause();
+	}
+	
+	public void resume() {
+		mediaPlayer.start();
+	}
+	
+}	

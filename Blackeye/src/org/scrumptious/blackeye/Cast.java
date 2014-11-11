@@ -124,6 +124,20 @@ public class Cast extends Podcast implements Serializable {
 		return this.isStarted;
 	}
 	
-	private String title,url,description,date,author,summary,subtitle,keywords,duration;
 	private boolean isStarted = false;
+
+	private String title,url,description,date,author,summary,subtitle,keywords,duration,parentName;
+
+	@Override
+	public void setParentName(String string) {
+		// TODO Auto-generated method stub
+		this.parentName = string;
+	}
+
+	@Override
+	public String getParentName() {
+		// TODO Auto-generated method stub
+		return this.parentName;
+	}
+
 }

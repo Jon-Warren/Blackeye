@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Top5Activity extends Activity {
+	private Cast cast;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -30,7 +31,7 @@ public class Top5Activity extends Activity {
          LinearLayout layout = new LinearLayout(this);
          layout.setOrientation(LinearLayout.VERTICAL);
          if(feeds != null)
-         for(Cast c : feeds) {
+         for(final Cast c : feeds) {
         	 LinearLayout castLayout = new LinearLayout(this);
         	 castLayout.setOrientation(LinearLayout.HORIZONTAL);
         	 TextView tv = new TextView(this);
@@ -45,8 +46,11 @@ public class Top5Activity extends Activity {
 				@Override
 				public boolean onTouch(View arg0, MotionEvent arg1) {
 					// TODO Auto-generated method stub
-					Toast.makeText(getApplicationContext(),"Need to go to new activity... ",1000).show();
-					return false;
+					if(arg1.getAction() != MotionEvent.ACTION_DOWN) return false;
+					Intent intent = new Intent(Top5Activity.this,PlayerActivity.class);
+					intent.putExtra("castTitle", c.getTitle());
+					startActivity(intent);
+					return true;
 				}});
         	 
         	 saveButton.setOnTouchListener(new OnTouchListener() {

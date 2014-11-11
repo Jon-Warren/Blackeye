@@ -6,5 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_feed">FeedActivity</string>
     <string name="top5">Top 5</string>
+    <string name="title_activity_top5">Top5Activity</string>
+    <string name="title_activity_player">PlayerActivity</string>
 
 </resources>
