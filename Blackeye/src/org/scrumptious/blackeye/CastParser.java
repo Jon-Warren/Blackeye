@@ -20,11 +20,12 @@ import android.widget.Toast;
 
 public class CastParser extends AsyncTask {
 	
-	private String feedTitle;
+	public String feedTitle;
 	private String firstUrl;
 	private InputStream inputStream;
 	private XmlPullParser xmlParser;
 	public String URL;
+	private int count = 0;
 	public static final HashMap<String,Cast> podcasts = new HashMap();
 	public CastParser(String path) {
 		this.firstUrl = path;
@@ -42,15 +43,19 @@ public class CastParser extends AsyncTask {
 	 
 	public void downloadPodcast(String mp3Url, String podcastFeed, String episodeTitle) {
 		
-		System.out.println(isExternalStorageWritable());
-		
 		try {
 			//File cacheDir = new File("/sdcard/",podcastFeed);
 			File root = Environment.getExternalStorageDirectory();
 			//if(!cacheDir.exists()) {
 			//	cacheDir.mkdirs();
 			//}
-			File newFile = new File(root, episodeTitle+".mp3");
+			File feedDir = new File(root.getAbsolutePath()+"/"+podcastFeed);
+			if(!feedDir.exists()) {
+				System.out.println("Making a directory: "+feedDir.getAbsolutePath());
+				feedDir.mkdir();
+			}
+
+			File newFile = new File(root, podcastFeed+"/"+episodeTitle+".mp3");
 			if(newFile.length() == 0) {
 				URL url = new URL(mp3Url);
 				InputStream input = new BufferedInputStream(url.openStream());
@@ -67,7 +72,9 @@ public class CastParser extends AsyncTask {
 			}
 			
 			
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -182,6 +189,8 @@ public class CastParser extends AsyncTask {
 				}
 				downloadPodcast(cast.getURL(), cast.getParentName(), cast.getTitle());
 				podcasts.put(cast.getTitle(), cast);
+				count ++;
+				if(count > 4) return;
 			}
             try {
                 try {xmlParser.nextText();} catch(Exception e) {}

@@ -44,17 +44,34 @@ import java.text.SimpleDateFormat;
 
 public class MainActivity extends Activity {
     public static final ArrayList<CastParser> parsers = new ArrayList<CastParser>();
-    public static final ArrayList<String> feedURLS = new ArrayList<String>();
-    
+    public static final ArrayList<String> feedURLS = new ArrayList<String>(), names = new ArrayList<String>();
+    int i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        i = 0;
         Globals.mainActivity = this;
         //setContentView(R.layout.activity_main);
         final LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
-        
+        String[][] feeds = Globals.loadFeeds();
+   	  if(feeds.length > 0) {
+   		  Log.d("Feed","Found "+feeds.length + "feeds");
+       	   String[] feedNames = feeds[0];
+       	   String[] feedURLs = feeds[1];
+       	   for(String feedName : feedNames) {
+       		   Log.d("Meh",feedName);
+       		   if(!names.contains(feedName)) {
+       			   names.add(feedName);
+       		   }
+       	   }
+       	   for(String feedURL : feedURLs) {
+       		Log.d("Meh",feedURL);
+       		   if(!feedURLS.contains(feedURL))
+       			   feedURLS.add(feedURL);
+       	   }
+   	  }
         final Button btn = new Button(this);
         btn.setText("Add Feed");
         btn.setOnTouchListener(new View.OnTouchListener() {
@@ -68,36 +85,46 @@ public class MainActivity extends Activity {
                 alertDialog.setMessage("Enter feed URL");
                 final EditText box = new EditText(MainActivity.this);
                 alertDialog.setView(box);
-                
+
+         	   
                 alertDialog.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int which) {
                       // here you can add functions
-                	   feedURLS.add(box.getText().toString());
-                	   CastParser parser = new CastParser(box.getText().toString());
-                	   Toast.makeText(MainActivity.this, "Downloading", Toast.LENGTH_SHORT).show();
-                	   parser.execute();
-                	   Toast.makeText(MainActivity.this, "Downloading Finished", Toast.LENGTH_SHORT).show();
-                	   try {
-						parser.get();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ExecutionException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-                	   
-                	   parsers.add(parser);
+                	   if(!feedURLS.contains(box.getText().toString())) {
+	                	   feedURLS.add(box.getText().toString());
+	                	   CastParser parser = new CastParser(box.getText().toString());
+	                	   
+	                	   Toast.makeText(MainActivity.this, "Downloading", Toast.LENGTH_SHORT).show();
+	                	   parser.execute();
+	                	   Toast.makeText(MainActivity.this, "Downloading Finished", Toast.LENGTH_SHORT).show();
+	                	   try {
+							parser.get();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	                	   
+	                	   parsers.add(parser);
+	                	   Globals.saveFeed(parser.feedTitle, box.getText().toString());
+                	   }
                 	   linearLayout.removeAllViews();
                 	   linearLayout.addView(btn);
-                	   
-                	   ArrayList<String> names = new ArrayList();
-                	   for(String s : CastParser.podcasts.keySet()) {
-                		   Cast c = CastParser.podcasts.get(s);
-                		   if(c != null && !names.contains(c.getParentName())) {
-                			   names.add(c.getParentName());
-                		   }
+                	  
+                	   String[][] feeds = Globals.loadFeeds();
+                	   String[] feedNames = feeds[0];
+                	   String[] feedURLs = feeds[1];
+                	   for(String feedName : feedNames) {
+                		   if(!names.contains(feedName))
+                			   names.add(feedName);
                 	   }
+                	   for(String feedURL : feedURLs) {
+                		   if(!feedURLS.contains(feedURL))
+                			   feedURLS.add(feedURL);
+                	   }
+                	   i = 0;
                 	   for(final String s : names) {
                 		   Button button = new Button(MainActivity.this);
                 		   button.setText(s);
@@ -126,7 +153,26 @@ public class MainActivity extends Activity {
 
         });
         linearLayout.addView(btn);
-        
+        for(i = 0; i < names.size(); i++) {
+ 		   Button button = new Button(MainActivity.this);
+ 		   button.setText(names.get(i));
+ 		   final String name = names.get(i);
+ 		   final String url = feedURLS.get(i);
+ 		   button.setOnTouchListener(new OnTouchListener() {
+
+				@Override
+				public boolean onTouch(View arg0, MotionEvent arg1) {
+					// TODO Auto-generated method stub
+					if(arg1.getAction() != MotionEvent.ACTION_DOWN) return false;
+					
+					Intent intent = new Intent(MainActivity.this,FeedActivity.class);
+					intent.putExtra("feedName", name);
+					intent.putExtra("feedURL", url );
+					startActivity(intent);
+					return true;
+				}});
+ 		   linearLayout.addView(button);
+ 	   }
         setContentView(linearLayout);
     }
 
@@ -151,5 +197,11 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void onResume() {
+    	i = 0;
+    	super.onResume();
     }
 }

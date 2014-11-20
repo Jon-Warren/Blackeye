@@ -4,6 +4,7 @@ import java.io.IOException;
 import android.media.*;
 import android.os.Environment;
 import android.provider.MediaStore.Audio.Media;
+import android.util.Log;
 
 
 public class Playback {
@@ -15,12 +16,8 @@ public class Playback {
 	}
 	
 	public void playAudio(String url) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
-		File root = Environment.getExternalStorageDirectory();
-		File newFile = new File(root, url+".mp3");
-		mediaPlayer.reset();
-		mediaPlayer.setDataSource(newFile.getCanonicalPath());
-		mediaPlayer.prepare();
-	    mediaPlayer.start();
+		
+	    
 	}
 	
 	public void stop() {
@@ -43,4 +40,29 @@ public class Playback {
 		mediaPlayer.start();
 	}
 	
+	public MediaPlayer getPlayer() {
+		return this.mediaPlayer;
+	}
+	 
+	public void skipForward(int amnt) {
+		if(mediaPlayer.getCurrentPosition() + amnt < mediaPlayer.getDuration())
+			mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() + amnt);
+	}
+	
+	public void skipBack(int amnt) {
+		if(mediaPlayer.getCurrentPosition() - amnt > 0)
+			mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() - amnt);
+	}
+	
+	public void setSrc(String src) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
+		File root = Environment.getExternalStorageDirectory();
+		File newFile = new File(root, src+".mp3");
+		mediaPlayer = new MediaPlayer();
+		mediaPlayer.reset();
+		mediaPlayer.setDataSource(newFile.getAbsolutePath());
+		mediaPlayer.prepare();
+		mediaPlayer.start();
+		mediaPlayer.pause();
+		Log.d("Media",""+mediaPlayer.getDuration());
+	}
 }	
