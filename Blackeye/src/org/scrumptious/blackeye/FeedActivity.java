@@ -20,11 +20,14 @@ import android.widget.TextView;
 public class FeedActivity extends TabActivity
 {
 		private String feedURL,feedName;
+		private Bundle bundle;
+		
             /** Called when the activity is first created. */
             @Override
             public void onCreate(Bundle savedInstanceState)
             {
                     super.onCreate(savedInstanceState);
+                    bundle = savedInstanceState;
                     setContentView(R.layout.activity_feed);
                     
                     
@@ -129,4 +132,17 @@ public class FeedActivity extends TabActivity
                    }
                 return super.onOptionsItemSelected(item);
             }
+               
+            //@Override
+            //public void onPause() {
+            //	super.onPause();
+            //}
+               
+            @Override   
+            public void onResume() {
+            	super.onResume();
+            	onCreate(bundle);
+            	
+           		
+           	}
 }

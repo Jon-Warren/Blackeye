@@ -2,7 +2,10 @@ package org.scrumptious.blackeye;
 
 import java.io.Serializable;
 
-public class Cast extends Podcast implements Serializable {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Cast extends Podcast implements Parcelable {
 
 	@Override
 	public String getTitle() {
@@ -112,6 +115,21 @@ public class Cast extends Podcast implements Serializable {
 		this.duration = string;
 	}
 	
+	public void setPercentPlayed(double percent) {
+		this.percentPlayed = percent;
+		if(percent > .8) {
+			setListenedTo(true);
+		}
+	}
+	
+	public void setProgress(int progress) {
+		this.progress = progress;
+	}
+	
+	public void setListenedTo(boolean bool) {
+		isListenedTo = bool;
+	}
+	
 	public void start() {
 		this.isStarted = true;
 	}
@@ -124,9 +142,19 @@ public class Cast extends Podcast implements Serializable {
 		return this.isStarted;
 	}
 	
+	public boolean isListenedTo() {
+		return this.isListenedTo;
+	}
+	
 	private boolean isStarted = false;
+	
+	private boolean isListenedTo = false;
 
 	private String title,url,description,date,author,summary,subtitle,keywords,duration,parentName;
+	
+	private double percentPlayed;
+	
+	private int progress;
 
 	@Override
 	public void setParentName(String string) {
@@ -138,6 +166,28 @@ public class Cast extends Podcast implements Serializable {
 	public String getParentName() {
 		// TODO Auto-generated method stub
 		return this.parentName;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getPercentPlayed() {
+		// TODO Auto-generated method stub
+		return percentPlayed;
+	}
+	
+	public int getProgress() {
+		return progress;
 	}
 
 }

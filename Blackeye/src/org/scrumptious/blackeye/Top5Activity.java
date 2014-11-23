@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +37,16 @@ public class Top5Activity extends Activity {
         	 LinearLayout castLayout = new LinearLayout(this);
         	 castLayout.setOrientation(LinearLayout.HORIZONTAL);
         	 TextView tv = new TextView(this);
+        	 //tv.setText("HELLO");
         	 tv.setText(c.getTitle());
+        	 System.out.println(c.isListenedTo());
+        	 if(!c.isListenedTo()) {
+        		 tv.setTextColor(Color.WHITE);
+        	 }
+        	 else {
+        		 tv.setTextColor(Color.GRAY);
+        	 }
+        	 //tv.setTextColor(Color.BLACK);
         	 castLayout.addView(tv);
         	 Button playButton = new Button(this);
         	 playButton.setText("Play");
@@ -49,6 +60,7 @@ public class Top5Activity extends Activity {
 					if(arg1.getAction() != MotionEvent.ACTION_DOWN) return false;
 					Intent intent = new Intent(Top5Activity.this,PlayerActivity.class);
 					intent.putExtra("castTitle", c.getTitle());
+					//intent.putExtra("cast", (Parcelable) c);
 					startActivity(intent);
 					return true;
 				}});

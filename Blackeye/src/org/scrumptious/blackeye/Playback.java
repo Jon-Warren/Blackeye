@@ -17,10 +17,24 @@ public class Playback {
 	public void playAudio(String url) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
 		File root = Environment.getExternalStorageDirectory();
 		File newFile = new File(root, url+".mp3");
+		//System.out.println(newFile.getCanonicalPath());
 		mediaPlayer.reset();
 		mediaPlayer.setDataSource(newFile.getCanonicalPath());
 		mediaPlayer.prepare();
 	    mediaPlayer.start();
+	    System.out.println(mediaPlayer.getCurrentPosition());
+	}
+	
+	public void playAudio(String url, int position) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
+		File root = Environment.getExternalStorageDirectory();
+		File newFile = new File(root, url+".mp3");
+		//System.out.println(newFile.getCanonicalPath());
+		mediaPlayer.reset();
+		mediaPlayer.setDataSource(newFile.getCanonicalPath());
+		mediaPlayer.prepare();
+		mediaPlayer.seekTo(position);
+	    mediaPlayer.start();
+	    System.out.println(mediaPlayer.getCurrentPosition());
 	}
 	
 	public void stop() {
@@ -37,10 +51,23 @@ public class Playback {
 	public void pause() {
 		// TODO Auto-generated method stub
 		mediaPlayer.pause();
+		System.out.println(mediaPlayer.getCurrentPosition());
 	}
 	
 	public void resume() {
 		mediaPlayer.start();
+		System.out.println(mediaPlayer.getCurrentPosition());
+	}
+	
+	public double getPercentPlayed() {
+		double position = mediaPlayer.getCurrentPosition();
+		double totalDuration = mediaPlayer.getDuration();
+		System.out.println(position/totalDuration);
+		return position/totalDuration;
+	}
+	
+	public int getPosition() {
+		return mediaPlayer.getCurrentPosition();
 	}
 	
 }	
