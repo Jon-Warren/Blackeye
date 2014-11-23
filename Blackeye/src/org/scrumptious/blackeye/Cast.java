@@ -7,6 +7,14 @@ import android.os.Parcelable;
 
 public class Cast extends Podcast implements Parcelable {
 
+	public boolean isSaved() {
+		return this.saved;
+	}
+			
+	public void setSaved(boolean saved) {
+		this.saved = saved;
+		}
+	
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub
@@ -130,6 +138,8 @@ public class Cast extends Podcast implements Parcelable {
 		isListenedTo = bool;
 	}
 	
+	private boolean saved = false;
+	
 	public void start() {
 		this.isStarted = true;
 	}
@@ -167,7 +177,7 @@ public class Cast extends Podcast implements Parcelable {
 		// TODO Auto-generated method stub
 		return this.parentName;
 	}
-
+	
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -177,7 +187,6 @@ public class Cast extends Podcast implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel arg0, int arg1) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -130,14 +130,10 @@ public class FeedActivity extends TabActivity
                 return super.onOptionsItemSelected(item);
             }
                
-            //@Override
-            //public void onPause() {
-            //	super.onPause();
-            //}
-               
-            @Override   
-            public void onResume() {
-            	super.onResume();
-            	onCreate(bundle);
-           	}
+            //@Override   
+            //public void onResume() {
+            //	
+            //	onCreate(bundle);
+            //   super.onResume();
+           	//}
 }

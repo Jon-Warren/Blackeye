@@ -21,18 +21,13 @@
         android:layout_marginBottom="17dp"
         android:text="Play" />
 
-<<<<<<< HEAD
+
     <Button
         android:id="@+id/Button2"
-=======
-    <TextView
-        android:id="@+id/text_title"
->>>>>>> cdefea2ddd1138f37f07955c9d84461c78e8f572
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-<<<<<<< HEAD
         android:text="Play from Beginning" />
     
     <Button
@@ -42,7 +37,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="Mark as Listened To" />
-=======
+
+
+	<TextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="18dp"
         android:text="@string/cast_title" />
@@ -78,6 +78,5 @@
         android:layout_alignLeft="@+id/text_pubdate"
         android:layout_below="@+id/text_pubdate"
         android:text="@string/cast_description" />
->>>>>>> cdefea2ddd1138f37f07955c9d84461c78e8f572
 
 </RelativeLayout>

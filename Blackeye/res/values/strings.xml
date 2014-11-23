@@ -8,15 +8,12 @@
     <string name="top5">Top 5</string>
     <string name="title_activity_top5">Top5Activity</string>
     <string name="title_activity_player">PlayerActivity</string>
-<<<<<<< HEAD
     <string name="cast_description">Description</string>
     <string name="cast_title">Title</string>
     <string name="cast_pubdate">Publication Date</string>
     <string name="cast_summary">Summary</string>
     <string name="cast_duration">Duration</string>
     <string name="cast_author">Author</string>
-=======
     <string name="title_activity_saved_tab">SavedTabActivity</string>
->>>>>>> 9a67e1ede38c4fd4f5861ffa0a21a2f5fdfea00a
 
 </resources>

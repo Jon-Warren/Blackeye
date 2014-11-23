@@ -27,7 +27,6 @@ public class PlayerActivity extends Activity {
 		this.setTitle(title);
 		final Cast cast = CastParser.podcasts.get(title);
 		final Button playButton = (Button)this.findViewById(R.id.button1);
-<<<<<<< HEAD
 		final Button beginningButton = (Button)this.findViewById(R.id.Button2);
 		final Button listenedToButton = (Button)this.findViewById(R.id.Button3);
 		//final Playback player = new Playback();
@@ -54,8 +53,6 @@ public class PlayerActivity extends Activity {
 				
 			}
 		});
-=======
-		final Playback player = new Playback();
 		
 		//zach's podcasts description stuff
 		TextView Author = (TextView)findViewById(R.id.text_author);
@@ -72,7 +69,7 @@ public class PlayerActivity extends Activity {
 		
 		TextView Description = (TextView)findViewById(R.id.text_description);
 		Description.setText(CastParser.podcasts.get(title).getDescription());
->>>>>>> cdefea2ddd1138f37f07955c9d84461c78e8f572
+
 		
 		playButton.setOnTouchListener(new OnTouchListener() {
 			@Override
