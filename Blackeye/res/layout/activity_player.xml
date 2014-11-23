@@ -21,12 +21,18 @@
         android:layout_marginBottom="17dp"
         android:text="Play" />
 
+<<<<<<< HEAD
     <Button
         android:id="@+id/Button2"
+=======
+    <TextView
+        android:id="@+id/text_title"
+>>>>>>> cdefea2ddd1138f37f07955c9d84461c78e8f572
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+<<<<<<< HEAD
         android:text="Play from Beginning" />
     
     <Button
@@ -36,5 +42,42 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="Mark as Listened To" />
+=======
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/cast_title" />
+
+    <TextView
+        android:id="@+id/text_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_title"
+        android:layout_below="@+id/text_title"
+        android:text="@string/cast_author" />
+
+    <TextView
+        android:id="@+id/text_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_author"
+        android:layout_below="@+id/text_author"
+        android:text="@string/cast_duration" />
+
+    <TextView
+        android:id="@+id/text_pubdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_duration"
+        android:layout_below="@+id/text_duration"
+        android:text="@string/cast_pubdate" />
+
+    <TextView
+        android:id="@+id/text_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_pubdate"
+        android:layout_below="@+id/text_pubdate"
+        android:text="@string/cast_description" />
+>>>>>>> cdefea2ddd1138f37f07955c9d84461c78e8f572
 
 </RelativeLayout>

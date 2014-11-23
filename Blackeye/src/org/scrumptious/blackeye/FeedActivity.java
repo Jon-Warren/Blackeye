@@ -58,20 +58,17 @@ public class FeedActivity extends TabActivity
                     tab1.setContent(top5Intent);
                    
                     tab2.setIndicator("Saved");
-                    
-                    Intent meh = new Intent(this,Top5Activity.class);
+                    Intent savedTabIntent = new Intent(this,SavedTabActivity.class);
                     final ArrayList<Cast> savedCasts = new ArrayList<Cast>();
-                    if(Globals.SAVED_HASH.get(feedName) != null)
-                    for(String castName : Globals.SAVED_HASH.get(feedName)) {
-                    	for(String s : CastParser.podcasts.keySet()) {
+                    for(String s : CastParser.podcasts.keySet()) {
                     		Cast c = CastParser.podcasts.get(s);
-                    		if(c != null && c.getTitle() != null && c.getTitle().equals(castName) && !savedCasts.contains(c)) {
+                    		if(c.isSaved() && c.getParentName().equals(feedName)) {
                     			savedCasts.add(c);
                     		}
-                    	}
                     }
-                    meh.putExtra("fiveFeeds",savedCasts);
-                    tab2.setContent(meh);
+                    
+                    savedTabIntent.putExtra("savedCasts",savedCasts);
+                    tab2.setContent(savedTabIntent);
                    
                     /** Add the tabs  to the TabHost to display. */
                     tabHost.addTab(tab1);
@@ -142,7 +139,5 @@ public class FeedActivity extends TabActivity
             public void onResume() {
             	super.onResume();
             	onCreate(bundle);
-            	
-           		
            	}
 }

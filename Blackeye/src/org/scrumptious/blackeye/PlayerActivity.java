@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class PlayerActivity extends Activity {
 	
@@ -26,6 +27,7 @@ public class PlayerActivity extends Activity {
 		this.setTitle(title);
 		final Cast cast = CastParser.podcasts.get(title);
 		final Button playButton = (Button)this.findViewById(R.id.button1);
+<<<<<<< HEAD
 		final Button beginningButton = (Button)this.findViewById(R.id.Button2);
 		final Button listenedToButton = (Button)this.findViewById(R.id.Button3);
 		//final Playback player = new Playback();
@@ -52,6 +54,25 @@ public class PlayerActivity extends Activity {
 				
 			}
 		});
+=======
+		final Playback player = new Playback();
+		
+		//zach's podcasts description stuff
+		TextView Author = (TextView)findViewById(R.id.text_author);
+		Author.setText(CastParser.podcasts.get(title).getAuthor());
+		
+		TextView Title = (TextView)findViewById(R.id.text_title);
+		Title.setText(CastParser.podcasts.get(title).getTitle());
+		
+		TextView Duration = (TextView)findViewById(R.id.text_duration);
+		Duration.setText(CastParser.podcasts.get(title).getDuration());
+		
+		TextView PubDate = (TextView)findViewById(R.id.text_pubdate);
+		PubDate.setText(CastParser.podcasts.get(title).getPubDate());
+		
+		TextView Description = (TextView)findViewById(R.id.text_description);
+		Description.setText(CastParser.podcasts.get(title).getDescription());
+>>>>>>> cdefea2ddd1138f37f07955c9d84461c78e8f572
 		
 		playButton.setOnTouchListener(new OnTouchListener() {
 			@Override

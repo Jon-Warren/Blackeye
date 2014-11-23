@@ -6,10 +6,7 @@ import org.scrumptious.blackeye.utils.Globals;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -20,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Top5Activity extends Activity {
+public class SavedTabActivity extends Activity {
 	private Cast cast;
 
 	@SuppressWarnings("unchecked")
@@ -29,7 +26,7 @@ public class Top5Activity extends Activity {
 		 super.onCreate(savedInstanceState);
 		 Intent intent = getIntent();
 		 ArrayList<Cast> feeds = 
-		     (ArrayList<Cast>)intent.getSerializableExtra("fiveFeeds");
+		     (ArrayList<Cast>)intent.getSerializableExtra("savedCasts");
 		 
          //String[] feeds = intent.getStringArrayExtra("fiveFeeds");
          LinearLayout layout = new LinearLayout(this);
@@ -39,16 +36,7 @@ public class Top5Activity extends Activity {
         	 LinearLayout castLayout = new LinearLayout(this);
         	 castLayout.setOrientation(LinearLayout.HORIZONTAL);
         	 TextView tv = new TextView(this);
-        	 //tv.setText("HELLO");
         	 tv.setText(c.getTitle());
-        	 System.out.println(c.isListenedTo());
-        	 if(!c.isListenedTo()) {
-        		 tv.setTextColor(Color.WHITE);
-        	 }
-        	 else {
-        		 tv.setTextColor(Color.GRAY);
-        	 }
-        	 //tv.setTextColor(Color.BLACK);
         	 castLayout.addView(tv);
         	 Button playButton = new Button(this);
         	 playButton.setText("Play");
@@ -60,9 +48,8 @@ public class Top5Activity extends Activity {
 				public boolean onTouch(View arg0, MotionEvent arg1) {
 					// TODO Auto-generated method stub
 					if(arg1.getAction() != MotionEvent.ACTION_DOWN) return false;
-					Intent intent = new Intent(Top5Activity.this,PlayerActivity.class);
+					Intent intent = new Intent(SavedTabActivity.this,PlayerActivity.class);
 					intent.putExtra("castTitle", c.getTitle());
-					//intent.putExtra("cast", (Parcelable) c);
 					startActivity(intent);
 					return true;
 				}});
@@ -72,7 +59,7 @@ public class Top5Activity extends Activity {
 				@Override
 				public boolean onTouch(View arg0, MotionEvent arg1) {
 					// TODO Auto-generated method stub
-					Toast.makeText(getApplicationContext(),"Saving",1000).show();
+					Toast.makeText(getApplicationContext(),"Need to add save code here",1000).show();
 					Globals.saveCast(c, c.getParentName());
 					return false;
 				}});
