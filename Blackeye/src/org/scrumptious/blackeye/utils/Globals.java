@@ -16,7 +16,9 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 public class Globals {
-	private static String[] feeds,casts;
+
+	private static String[] feeds, casts;
+
 	public static Activity mainActivity;
 	public static final HashMap<String,ArrayList<String>> SAVED_HASH = new HashMap<String,ArrayList<String>>();
 	public static String[] getFeeds() {
@@ -69,9 +71,138 @@ public class Globals {
 	
 	@SuppressLint("NewApi") public static void clear(String feedName) {
 		SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
-    	Editor edit = prefs.edit();
-		edit.putStringSet(feedName, new HashSet<String>());
-		edit.commit();
+        Editor edit = prefs.edit();
+        edit.remove("savedCasts");
+        edit.commit();
+        for(Cast c : CastParser.podcasts.values()) {
+        	c.setSaved(false);
+        }
 	}
 	
+
+	@SuppressLint("NewApi") public static void loadSavedCasts() {
+        //add code to load saved stuffs :3
+        if(mainActivity == null) return;
+        SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        Set<String> casts = prefs.getStringSet("savedCasts", new HashSet<String>());
+        for(String cast : casts) {
+            String[] items = cast.split("<!>");
+            Cast castObj = new Cast();
+            castObj.setAuthor(items[0]);
+            castObj.setDescription(items[1]);
+            castObj.setDuration(items[2]);
+            castObj.setKeywords(items[3]);
+            castObj.setParentName(items[4]);
+            castObj.setPubDate(items[5]);
+            castObj.setSubtitle(items[6]);
+            castObj.setSummary(items[7]);
+            castObj.setTitle(items[8]);
+            castObj.setURL(items[9]);
+            castObj.setSaved(true);
+            
+            CastParser.podcasts.put(castObj.getTitle(), castObj);
+        }
+    }
+	
+	@SuppressLint("NewApi") 
+	public static void saveCast(Cast cast, String feedTitle) {
+        SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        String addString = "";
+        addString += cast.getAuthor();
+        addString += "<!>";
+        addString += cast.getDescription();
+        addString += "<!>";
+        addString += cast.getDuration();
+        addString += "<!>";
+        addString += cast.getKeywords();
+        addString += "<!>";
+        addString += cast.getParentName();
+        addString += "<!>";
+        addString += cast.getPubDate();
+        addString += "<!>";
+        addString += cast.getSubtitle();
+        addString += "<!>";
+        addString += cast.getSummary();
+        addString += "<!>";
+        addString += cast.getTitle();
+        addString += "<!>";
+        addString += cast.getURL();
+        Set<String> hs = prefs.getStringSet("savedCasts", new HashSet<String>());
+        hs.add(addString);
+        Editor edit = prefs.edit();
+        edit.remove("savedCasts");
+        edit.commit();
+        edit.putStringSet("savedCasts", hs);
+        edit.commit();
+    }
+	
+	@SuppressLint("NewApi") 
+	public static void saveTopFive(Cast cast, String feedTitle) {
+        SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        String addString = "";
+        addString += cast.getAuthor();
+        addString += "<!>";
+        addString += cast.getDescription();
+        addString += "<!>";
+        addString += cast.getDuration();
+        addString += "<!>";
+        addString += cast.getKeywords();
+        addString += "<!>";
+        addString += cast.getParentName();
+        addString += "<!>";
+        addString += cast.getPubDate();
+        addString += "<!>";
+        addString += cast.getSubtitle();
+        addString += "<!>";
+        addString += cast.getSummary();
+        addString += "<!>";
+        addString += cast.getTitle();
+        addString += "<!>";
+        addString += cast.getURL();
+        Set<String> hs = prefs.getStringSet(feedTitle+"Casts", new HashSet<String>());
+        hs.add(addString);
+        Editor edit = prefs.edit();
+        edit.remove(feedTitle+"Casts");
+        edit.commit();
+        edit.putStringSet(feedTitle+"Casts", hs);
+        edit.commit();
+    }
+	
+	@SuppressLint("NewApi") public static void loadTopFive(String feedTitle) {
+        //add code to load saved stuffs :3
+        if(mainActivity == null) return;
+        SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        Set<String> casts = prefs.getStringSet(feedTitle+"Casts", new HashSet<String>());
+        for(String cast : casts) {
+            String[] items = cast.split("<!>");
+            Cast castObj = new Cast();
+            castObj.setAuthor(items[0]);
+            castObj.setDescription(items[1]);
+            castObj.setDuration(items[2]);
+            castObj.setKeywords(items[3]);
+            castObj.setParentName(items[4]);
+            castObj.setPubDate(items[5]);
+            castObj.setSubtitle(items[6]);
+            castObj.setSummary(items[7]);
+            castObj.setTitle(items[8]);
+            castObj.setURL(items[9]);
+            castObj.setSaved(false);
+            
+            CastParser.podcasts.put(castObj.getTitle(), castObj);
+        }
+    }
+	
+	@SuppressLint("NewApi")
+	public static void removeCast(Cast c, String feedTitle) {
+		SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        Editor edit = prefs.edit();
+        Set<String> casts = prefs.getStringSet(feedTitle+"Casts", new HashSet<String>());
+        for(String cast : casts) {
+        	if(cast.contains(c.getTitle())) {
+        		casts.remove(cast);
+        	}
+        }
+        edit.putStringSet(feedTitle+"Casts", casts);
+        edit.commit();
+	}
 }

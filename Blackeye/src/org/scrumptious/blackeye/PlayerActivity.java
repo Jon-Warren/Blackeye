@@ -23,7 +23,11 @@ public class PlayerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
 		final String title = getIntent().getExtras().getString("castTitle");
+		try {
 		this.setTitle(title.split("/")[1]);
+		} catch(Exception e) {
+			this.setTitle(title);
+		}
 		final Button playButton = (Button)this.findViewById(R.id.button1);
 		final Playback player = new Playback();
 		try {

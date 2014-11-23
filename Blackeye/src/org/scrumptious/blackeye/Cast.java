@@ -3,7 +3,16 @@ package org.scrumptious.blackeye;
 import java.io.Serializable;
 
 public class Cast extends Podcast implements Serializable {
-
+	
+	
+	public boolean isSaved() {
+		return this.saved;
+	}
+	
+	public void setSaved(boolean saved) {
+		this.saved = saved;
+	}
+	
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub
@@ -127,6 +136,8 @@ public class Cast extends Podcast implements Serializable {
 	private boolean isStarted = false;
 
 	private String title,url,description,date,author,summary,subtitle,keywords,duration,parentName;
+	
+	private boolean saved = false;
 
 	@Override
 	public void setParentName(String string) {

@@ -57,17 +57,15 @@ public class MainActivity extends Activity {
 
         String[][] feeds = Globals.loadFeeds();
    	  if(feeds.length > 0) {
-   		  Log.d("Feed","Found "+feeds.length + "feeds");
        	   String[] feedNames = feeds[0];
        	   String[] feedURLs = feeds[1];
        	   for(String feedName : feedNames) {
-       		   Log.d("Meh",feedName);
        		   if(!names.contains(feedName)) {
        			   names.add(feedName);
        		   }
        	   }
        	   for(String feedURL : feedURLs) {
-       		Log.d("Meh",feedURL);
+
        		   if(!feedURLS.contains(feedURL))
        			   feedURLS.add(feedURL);
        	   }
@@ -176,12 +174,6 @@ public class MainActivity extends Activity {
         setContentView(linearLayout);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        return true;
-    }
     
     private void startActivity(String url) {
     	Intent i = new Intent(this,FeedActivity.class);
@@ -190,12 +182,60 @@ public class MainActivity extends Activity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    private int group1Id = 1;
+    int homeId = Menu.FIRST;
+    int profileId = Menu.FIRST +1;
+    int searchId = Menu.FIRST +2;
+    int dealsId = Menu.FIRST +3;
+    int helpId = Menu.FIRST +4;
+    int contactusId = Menu.FIRST +5;
+
+       @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+
+        menu.add(group1Id, homeId, homeId, "Refresh Feed");
+
+        return super.onCreateOptionsMenu(menu); 
+        }
+
+       @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+    case 1:
+        //write your code here
+    	ArrayList<String> keys = new ArrayList<String>();
+    	for(String s : CastParser.podcasts.keySet()) {
+        	Cast c = CastParser.podcasts.get(s);
+        	keys.add(s);
+        		
+        }
+    	for(String s : keys) {
+    		CastParser.podcasts.remove(s);
+    	}
+    	for(String url : feedURLS) {
+    		CastParser parser = new CastParser(url);
+        	parser.execute();
+    			try {
+    				parser.get();
+    			} catch (InterruptedException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			} catch (ExecutionException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+    	}
+    	
+    	finish();
+    	startActivity(getIntent());
+        return true;
+
+    default:
+        break;
+
+           }
         return super.onOptionsItemSelected(item);
     }
     

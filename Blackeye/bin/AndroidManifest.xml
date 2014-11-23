@@ -38,8 +38,9 @@
             android:label="@string/title_activity_player" >
         </activity>
         <activity
-            android:name=".LoadingActivity"
-            android:label="@string/title_activity_loading" >
+
+            android:name=".SavedTabActivity"
+            android:label="@string/title_activity_saved_tab" >
         </activity>
     </application>
 

@@ -1,4 +1,0 @@
-This is the first commit.
-new line
-Another Line
-4th Line

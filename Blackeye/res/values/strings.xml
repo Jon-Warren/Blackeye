@@ -8,8 +8,12 @@
     <string name="top5">Top 5</string>
     <string name="title_activity_top5">Top5Activity</string>
     <string name="title_activity_player">PlayerActivity</string>
+
     <string name="title_activity_loading">LoadingActivity</string>
     <string name="skip_forward">Skip Forward</string>
     <string name="skip_backward">Skip Backward</string>
+
+    <string name="title_activity_saved_tab">SavedTabActivity</string>
+
 
 </resources>
