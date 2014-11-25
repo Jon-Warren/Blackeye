@@ -68,7 +68,7 @@ public class Top5Activity extends Activity {
 			 tv.setLayoutParams(params);
 			 feedName = c.getParentName();
         	 tv.setText(c.getTitle());
-        	 System.out.println(c.isListenedTo());
+        	 //System.out.println(c.isListenedTo());
         	 if(!c.isListenedTo()) {
         		 tv.setTextColor(Color.WHITE);
         	 }
@@ -123,14 +123,17 @@ public class Top5Activity extends Activity {
 		super.onResume();
 		Globals.loadTopFive(feedName);
 		if(layout != null) {
-			RelativeLayout l = (RelativeLayout)layout.getChildAt(0);
-			for(int i = 0; i < l.getChildCount(); i++){
-				if(l.getChildAt(i) != null && l.getChildAt(i) instanceof TextView) {
-					Cast c = CastParser.podcasts.get(((TextView)l.getChildAt(i)).getText());
-					System.out.println(((TextView)l.getChildAt(i)).getText());
-					if(c != null && c.isListenedTo()) {
-						((TextView)l.getChildAt(i)).setTextColor(Color.GRAY);
-						((TextView)l.getChildAt(i)).invalidate();
+			for(int x = 0; x < layout.getChildCount(); x++) {
+				RelativeLayout l = (RelativeLayout)layout.getChildAt(x);
+				//System.out.println("Layout count: "+l.getChildCount());
+				for(int i = 0; i < l.getChildCount(); i++){
+					if(l.getChildAt(i) != null && l.getChildAt(i) instanceof TextView) {
+						Cast c = CastParser.podcasts.get(((TextView)l.getChildAt(i)).getText());
+						System.out.println("asd" + ((TextView)l.getChildAt(i)).getText());
+						if(c != null && c.isListenedTo()) {
+							((TextView)l.getChildAt(i)).setTextColor(Color.GRAY);
+							((TextView)l.getChildAt(i)).invalidate();
+						}
 					}
 				}
 			}

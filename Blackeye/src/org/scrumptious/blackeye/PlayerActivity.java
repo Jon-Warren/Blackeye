@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class PlayerActivity extends Activity {
 	String title;
 	Playback player = new Playback();
 	Cast cast;
+	private boolean isListened = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class PlayerActivity extends Activity {
 		this.setTitle(title);
 		System.out.println(title.split("/")[1]);
 		cast = CastParser.podcasts.get(title.split("/")[1]);
+		this.isListened = cast.isListenedTo();
 //		System.out.println("Cast: "+cast.getTitle());
 		final Button playButton = (Button)this.findViewById(R.id.button1);
 		final Button beginningButton = (Button)this.findViewById(R.id.Button2);
@@ -103,7 +106,10 @@ public class PlayerActivity extends Activity {
 		listenedToButton.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				cast.setListenedTo(true);
-				System.out.println(cast.isListenedTo());
+				cast.setProgress(player.getPosition());
+				cast.setPercentPlayed(player.getPercentPlayed());
+				isListened = true;
+				System.out.println("Is Listened: "+isListened + " | " + cast.isListenedTo());
 				return true;
 			}
 		});
@@ -228,6 +234,7 @@ public class PlayerActivity extends Activity {
 		player.stop();
 		cast.setPercentPlayed(player.getPercentPlayed());
 		cast.setProgress(player.getPosition());
+		cast.setListenedTo(this.isListened || cast.getPercentPlayed() > 0.8);
 		System.out.println(cast.getPercentPlayed());
 		CastParser.podcasts.put(cast.getTitle(), cast);
 		Globals.saveTopFive(cast, cast.getParentName());

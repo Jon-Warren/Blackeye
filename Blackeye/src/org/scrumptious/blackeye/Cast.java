@@ -125,7 +125,6 @@ public class Cast extends Podcast implements Parcelable {
 	
 	public void setPercentPlayed(double percent) {
 		this.percentPlayed = percent;
-		
 	}
 	
 	public void setProgress(int progress) {
@@ -151,7 +150,7 @@ public class Cast extends Podcast implements Parcelable {
 	}
 	
 	public boolean isListenedTo() {
-		return this.percentPlayed >= 0.8 || this.isListenedTo; 
+		return this.isListenedTo; 
 	}
 	
 	private boolean isStarted = false;

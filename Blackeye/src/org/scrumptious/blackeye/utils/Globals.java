@@ -99,7 +99,9 @@ public class Globals {
             castObj.setTitle(items[8]);
             castObj.setURL(items[9]);
             try {
-            castObj.setPercentPlayed(Double.parseDouble(items[10]));
+	            castObj.setPercentPlayed(Double.parseDouble(items[10]));
+	            castObj.setProgress(Integer.parseInt(items[11]));
+	            castObj.setListenedTo(items[12].equals("true"));
             }catch(Exception e) {}
             castObj.setSaved(true);
             
@@ -132,6 +134,10 @@ public class Globals {
         addString += cast.getURL();
         addString += "<!>";
         addString += cast.getPercentPlayed();
+        addString += "<!>";
+        addString += cast.getProgress();
+        addString += "<!>";
+        addString += cast.isListenedTo();
         Set<String> hs = prefs.getStringSet("savedCasts", new HashSet<String>());
         hs.add(addString);
         Editor edit = prefs.edit();
@@ -166,6 +172,10 @@ public class Globals {
         addString += cast.getURL();
         addString += "<!>";
         addString += cast.getPercentPlayed();
+        addString += "<!>";
+        addString += cast.getProgress();
+        addString += "<!>";
+        addString += cast.isListenedTo();
         Set<String> hs = prefs.getStringSet(feedTitle+"Casts", new HashSet<String>());
         for(String c : hs) {
         	if(c.contains(cast.getTitle())) {
@@ -187,7 +197,7 @@ public class Globals {
         if(mainActivity == null) return;
         SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
         Set<String> casts = prefs.getStringSet(feedTitle+"Casts", new HashSet<String>());
-        System.out.println(casts.toString());
+        //System.out.println(casts.toString());
         for(String cast : casts) {
             String[] items = cast.split("<!>");
             Cast castObj = new Cast();
@@ -203,6 +213,9 @@ public class Globals {
             castObj.setURL(items[9]);
             try {
                 castObj.setPercentPlayed(Double.parseDouble(items[10]));
+                castObj.setProgress(Integer.parseInt(items[11]));
+                castObj.setListenedTo(items[12].equals("true"));
+                System.out.println(castObj.getTitle() + " Is listened: "+items[12].equals("true"));
                 }catch(Exception e) {}
             castObj.setSaved(false);
             
