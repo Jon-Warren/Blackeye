@@ -7,6 +7,7 @@ import org.scrumptious.blackeye.utils.Globals;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -25,7 +26,7 @@ import android.widget.Toast;
 
 public class SavedTabActivity extends Activity {
 	private Cast cast;
-
+	LinearLayout layout;
 	@SuppressLint({ "NewApi", "ResourceAsColor" }) @SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class SavedTabActivity extends Activity {
 		 sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 		                                              LayoutParams.FILL_PARENT));
          
-         LinearLayout layout = new LinearLayout(this);
+          layout = new LinearLayout(this);
          layout.setOrientation(LinearLayout.VERTICAL);
          if(feeds != null)
          for(final Cast c : feeds) {
@@ -63,6 +64,12 @@ public class SavedTabActivity extends Activity {
  			 tv.setLayoutParams(params);
      			 
         	 tv.setText(c.getTitle());
+        	 if(!c.isListenedTo()) {
+        		 tv.setTextColor(Color.WHITE);
+        	 }
+        	 else {
+        		 tv.setTextColor(Color.GRAY);
+        	 }
         	 castLayout.addView(tv);
         	 Button playButton = new Button(this);
         	 playButton.setText("Play");
@@ -101,5 +108,23 @@ public class SavedTabActivity extends Activity {
          }
          sv.addView(layout);
          setContentView(sv);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(layout != null) {
+			RelativeLayout l = (RelativeLayout)layout.getChildAt(0);
+			for(int i = 0; i < l.getChildCount(); i++){
+				if(l.getChildAt(i) != null && l.getChildAt(i) instanceof TextView) {
+					Cast c = CastParser.podcasts.get(((TextView)l.getChildAt(i)).getText());
+					System.out.println(((TextView)l.getChildAt(i)).getText());
+					if(c != null && c.isListenedTo()) {
+						((TextView)l.getChildAt(i)).setTextColor(Color.GRAY);
+						((TextView)l.getChildAt(i)).invalidate();
+					}
+				}
+			}
+		}
 	}
 }

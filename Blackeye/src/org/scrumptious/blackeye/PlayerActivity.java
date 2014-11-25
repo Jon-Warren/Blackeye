@@ -2,9 +2,12 @@ package org.scrumptious.blackeye;
 
 import java.io.IOException;
 
+import org.scrumptious.blackeye.utils.Globals;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +21,10 @@ import android.widget.TextView;
 
 public class PlayerActivity extends Activity {
 	
+	String title;
+	Playback player = new Playback();
+	Cast cast;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,8 +35,6 @@ public class PlayerActivity extends Activity {
 		} catch(Exception e) {
 			this.setTitle(title);
 		}
-		final Button playButton = (Button)this.findViewById(R.id.button1);
-		final Playback player = new Playback();
 		try {
 			if(CastParser.podcasts.get(title) == null) {
 				System.out.println("No podcast named "+title);
@@ -75,8 +80,7 @@ public class PlayerActivity extends Activity {
 		    public void run() {
 		        if(player.getPlayer() != null){
 		            int mCurrentPosition = player.getPlayer().getCurrentPosition();
-		            if(player.isPlaying())
-		            	mSeekBar.setProgress(mCurrentPosition/1000);
+		            mSeekBar.setProgress(mCurrentPosition/1000);
 		            TextView text = (TextView)findViewById(R.id.textView1);
 
 		            
@@ -87,8 +91,59 @@ public class PlayerActivity extends Activity {
 		    }
 		};
 		mRunnable.run();
+		//final Cast cast = getIntent().getExtras().getParcelable("cast");
+		this.setTitle(title);
+		System.out.println(title.split("/")[1]);
+		cast = CastParser.podcasts.get(title.split("/")[1]);
+//		System.out.println("Cast: "+cast.getTitle());
+		final Button playButton = (Button)this.findViewById(R.id.button1);
+		final Button beginningButton = (Button)this.findViewById(R.id.Button2);
+		final Button listenedToButton = (Button)this.findViewById(R.id.Button3);
+		//final Playback player = new Playback();
+		listenedToButton.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				cast.setListenedTo(true);
+				System.out.println(cast.isListenedTo());
+				return true;
+			}
+		});
+		
+		beginningButton.setOnTouchListener(new OnTouchListener() {
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				if(arg1.getAction() != MotionEvent.ACTION_DOWN) return false;
+				player.pause();
+				cast.setProgress(0);
+				try {
+					player.playToResume(cast.getProgress());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				} 
+				return true;
+				
+			}
+		});
+		
+		//zach's podcasts description stuff
+		if(cast != null) {
+		TextView Author = (TextView)findViewById(R.id.text_author);
+		
+		Author.setText("Author"+ cast.getAuthor());
+		
+		TextView Title = (TextView)findViewById(R.id.text_title);
+		Title.setText("Title: "+cast.getTitle());
+		
+		TextView Duration = (TextView)findViewById(R.id.text_duration);
+		Duration.setText("Duration: "+cast.getDuration());
+		
+		TextView PubDate = (TextView)findViewById(R.id.text_pubdate);
+		PubDate.setText("Publicaton Date: "+cast.getPubDate());
+		
+		TextView Description = (TextView)findViewById(R.id.text_description);
+		Description.setText("Description: "+Html.fromHtml(cast.getDescription()).toString());
+		}
+		
 		playButton.setOnTouchListener(new OnTouchListener() {
-
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				// TODO Auto-generated method stub
@@ -99,9 +154,22 @@ public class PlayerActivity extends Activity {
 						if(playButton.getText().equals("Play")) {
 							player.resume();
 							mSeekBar.setMax(player.getPlayer().getDuration()/1000);
+							try {
+							player.playToResume(cast.getProgress());
+							} catch(Exception e) {
+								player.resume();
+							}
+							//player.playAudio(title);
+							cast.setPercentPlayed(player.getPercentPlayed());
+							cast.setProgress(player.getPosition());
+							CastParser.podcasts.put(cast.getTitle(), cast);
+
 							
 						} else {
 							player.resume();
+							cast.setPercentPlayed(player.getPercentPlayed());
+							cast.setProgress(player.getPosition());
+							CastParser.podcasts.put(cast.getTitle(), cast);
 						}
 						playButton.setText("Pause");
 					} catch (Exception e) {
@@ -111,6 +179,10 @@ public class PlayerActivity extends Activity {
 				} else {
 					playButton.setText("Resume");
 					player.pause();
+					cast.setPercentPlayed(player.getPercentPlayed());
+					cast.setProgress(player.getPosition());
+					System.out.println(cast.getPercentPlayed());
+					CastParser.podcasts.put(cast.getTitle(), cast);
 				}
 				return true;
 			}});
@@ -151,4 +223,16 @@ public class PlayerActivity extends Activity {
 		return time;
 	}
 	
+	@Override
+	public void onPause() {
+		player.stop();
+		cast.setPercentPlayed(player.getPercentPlayed());
+		cast.setProgress(player.getPosition());
+		System.out.println(cast.getPercentPlayed());
+		CastParser.podcasts.put(cast.getTitle(), cast);
+		Globals.saveTopFive(cast, cast.getParentName());
+		
+		super.onPause();
+		
+	}
 }

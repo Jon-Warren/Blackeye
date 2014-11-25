@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
+import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +29,8 @@ import android.widget.Toast;
 
 public class Top5Activity extends Activity {
 	private Cast cast;
-
+	LinearLayout layout;
+	String feedName;
 	@SuppressLint({ "ResourceAsColor", "NewApi" }) @SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,7 @@ public class Top5Activity extends Activity {
 		 sv.setBackgroundColor(android.R.color.transparent);
 		 sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 		                                              LayoutParams.FILL_PARENT));
-         LinearLayout layout = new LinearLayout(this);
+          layout = new LinearLayout(this);
          layout.setOrientation(LinearLayout.VERTICAL);
 
          if(feeds != null)
@@ -64,8 +66,16 @@ public class Top5Activity extends Activity {
 			 int width = size.x;
 			 params.width = width/2;
 			 tv.setLayoutParams(params);
-
+			 feedName = c.getParentName();
         	 tv.setText(c.getTitle());
+        	 System.out.println(c.isListenedTo());
+        	 if(!c.isListenedTo()) {
+        		 tv.setTextColor(Color.WHITE);
+        	 }
+        	 else {
+        		 tv.setTextColor(Color.GRAY);
+        	 }
+        	 //tv.setTextColor(Color.BLACK);
         	 castLayout.addView(tv);
         	 Button playButton = new Button(this);
         	 playButton.setText("Play");
@@ -106,5 +116,24 @@ public class Top5Activity extends Activity {
          }
          sv.addView(layout);
          setContentView(sv);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		Globals.loadTopFive(feedName);
+		if(layout != null) {
+			RelativeLayout l = (RelativeLayout)layout.getChildAt(0);
+			for(int i = 0; i < l.getChildCount(); i++){
+				if(l.getChildAt(i) != null && l.getChildAt(i) instanceof TextView) {
+					Cast c = CastParser.podcasts.get(((TextView)l.getChildAt(i)).getText());
+					System.out.println(((TextView)l.getChildAt(i)).getText());
+					if(c != null && c.isListenedTo()) {
+						((TextView)l.getChildAt(i)).setTextColor(Color.GRAY);
+						((TextView)l.getChildAt(i)).invalidate();
+					}
+				}
+			}
+		}
 	}
 }

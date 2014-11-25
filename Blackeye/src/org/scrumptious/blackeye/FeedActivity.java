@@ -33,6 +33,7 @@ import android.widget.TextView;
 public class FeedActivity extends TabActivity
 {
 		private String feedURL,feedName;
+
 		TabHost tabHost;
 		private int group1Id = 1;
 	    int homeId = Menu.FIRST;
@@ -70,11 +71,9 @@ public class FeedActivity extends TabActivity
             
             savedTabIntent.putExtra("savedCasts",savedCasts);
             tab2.setContent(savedTabIntent);
-           
-            /** Add the tabs  to the TabHost to display. */
-            
-            tabHost.addTab(tab2);
-
+                   
+	        /** Add the tabs  to the TabHost to display. */
+	        tabHost.addTab(tab2);
     }
     
 
@@ -226,6 +225,7 @@ public class FeedActivity extends TabActivity
 
 
        }
+       
        private void setTabOne() {
     	   TabSpec tab1 = tabHost.newTabSpec("First Tab");
            
@@ -279,5 +279,6 @@ public class FeedActivity extends TabActivity
            top5Intent.putExtra("fiveFeeds",topFiveCasts);
            tab1.setContent(top5Intent);
            tabHost.addTab(tab1);
-       }
+       }               
+
 }

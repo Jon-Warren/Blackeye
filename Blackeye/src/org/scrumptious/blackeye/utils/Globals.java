@@ -98,6 +98,9 @@ public class Globals {
             castObj.setSummary(items[7]);
             castObj.setTitle(items[8]);
             castObj.setURL(items[9]);
+            try {
+            castObj.setPercentPlayed(Double.parseDouble(items[10]));
+            }catch(Exception e) {}
             castObj.setSaved(true);
             
             CastParser.podcasts.put(castObj.getTitle(), castObj);
@@ -127,6 +130,8 @@ public class Globals {
         addString += cast.getTitle();
         addString += "<!>";
         addString += cast.getURL();
+        addString += "<!>";
+        addString += cast.getPercentPlayed();
         Set<String> hs = prefs.getStringSet("savedCasts", new HashSet<String>());
         hs.add(addString);
         Editor edit = prefs.edit();
@@ -159,7 +164,16 @@ public class Globals {
         addString += cast.getTitle();
         addString += "<!>";
         addString += cast.getURL();
+        addString += "<!>";
+        addString += cast.getPercentPlayed();
         Set<String> hs = prefs.getStringSet(feedTitle+"Casts", new HashSet<String>());
+        for(String c : hs) {
+        	if(c.contains(cast.getTitle())) {
+        		System.out.println(cast.getTitle());
+        		hs.remove(c);
+        		break;
+        	}
+        }
         hs.add(addString);
         Editor edit = prefs.edit();
         edit.remove(feedTitle+"Casts");
@@ -173,6 +187,7 @@ public class Globals {
         if(mainActivity == null) return;
         SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
         Set<String> casts = prefs.getStringSet(feedTitle+"Casts", new HashSet<String>());
+        System.out.println(casts.toString());
         for(String cast : casts) {
             String[] items = cast.split("<!>");
             Cast castObj = new Cast();
@@ -186,6 +201,9 @@ public class Globals {
             castObj.setSummary(items[7]);
             castObj.setTitle(items[8]);
             castObj.setURL(items[9]);
+            try {
+                castObj.setPercentPlayed(Double.parseDouble(items[10]));
+                }catch(Exception e) {}
             castObj.setSaved(false);
             
             CastParser.podcasts.put(castObj.getTitle(), castObj);
@@ -194,14 +212,18 @@ public class Globals {
 	
 	@SuppressLint("NewApi")
 	public static void removeCast(Cast c, String feedTitle) {
+		c.setSaved(false);
 		SharedPreferences prefs = mainActivity.getPreferences(Context.MODE_PRIVATE);
         Editor edit = prefs.edit();
         Set<String> casts = prefs.getStringSet(feedTitle+"Casts", new HashSet<String>());
         for(String cast : casts) {
         	if(cast.contains(c.getTitle())) {
         		casts.remove(cast);
+        		break;
         	}
         }
+        edit.remove(feedTitle+"Casts");
+        edit.commit();
         edit.putStringSet(feedTitle+"Casts", casts);
         edit.commit();
 	}

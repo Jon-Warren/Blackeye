@@ -45,14 +45,63 @@
         android:layout_alignBottom="@+id/button1"
         android:layout_toLeftOf="@+id/button1"
         android:text="@string/skip_backward" />
+    
+    <Button
+        android:id="@+id/Button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="Mark as Listened To" />
 
     <TextView
-        android:id="@+id/authorTv"
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_author"
+        android:layout_below="@+id/Button3"
+        android:text="@string/cast_title" />
+
+    <TextView
+        android:id="@+id/text_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_pubdate"
+        android:layout_below="@+id/text_author"
+        android:text="@string/cast_duration" />
+
+    <TextView
+        android:id="@+id/text_pubdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_duration"
+        android:layout_toLeftOf="@+id/button1"
+        android:text="@string/cast_pubdate" />
+
+    <TextView
+        android:id="@+id/text_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_pubdate"
+        android:layout_below="@+id/text_pubdate"
+        android:text="@string/cast_description" />
+
+    <TextView
+        android:id="@+id/text_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/text_duration"
+        android:layout_below="@+id/text_title"
+        android:text="@string/cast_author" />
+
+    <Button
+        android:id="@+id/Button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="23dp"
-        android:text="TextView" />
+        android:layout_toLeftOf="@+id/Button3"
+        android:text="Play from Beginning" />
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ public abstract class Podcast {
 	public abstract String getKeywords();
 	public abstract String getDuration();
 	public abstract String getParentName();
+	public abstract double getPercentPlayed();
 	public abstract void setTitle(String string);
 	public abstract void setURL(String string);
 	public abstract void setDescription(String string);
@@ -21,4 +22,5 @@ public abstract class Podcast {
 	public abstract void setKeywords(String string);
 	public abstract void setDuration(String string);
 	public abstract void setParentName(String string);
+	public abstract void setPercentPlayed(double percent);
 }

@@ -2,16 +2,18 @@ package org.scrumptious.blackeye;
 
 import java.io.Serializable;
 
-public class Cast extends Podcast implements Serializable {
-	
-	
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Cast extends Podcast implements Parcelable {
+
 	public boolean isSaved() {
 		return this.saved;
 	}
-	
+			
 	public void setSaved(boolean saved) {
 		this.saved = saved;
-	}
+		}
 	
 	@Override
 	public String getTitle() {
@@ -121,6 +123,21 @@ public class Cast extends Podcast implements Serializable {
 		this.duration = string;
 	}
 	
+	public void setPercentPlayed(double percent) {
+		this.percentPlayed = percent;
+		
+	}
+	
+	public void setProgress(int progress) {
+		this.progress = progress;
+	}
+	
+	public void setListenedTo(boolean bool) {
+		isListenedTo = bool;
+	}
+	
+	private boolean saved = false;
+	
 	public void start() {
 		this.isStarted = true;
 	}
@@ -130,14 +147,22 @@ public class Cast extends Podcast implements Serializable {
 	}
 	
 	public boolean isStarted() {
-		return this.isStarted;
+		return this.percentPlayed > 0 || this.isStarted;
+	}
+	
+	public boolean isListenedTo() {
+		return this.percentPlayed >= 0.8 || this.isListenedTo; 
 	}
 	
 	private boolean isStarted = false;
+	
+	private boolean isListenedTo = false;
 
 	private String title,url,description,date,author,summary,subtitle,keywords,duration,parentName;
 	
-	private boolean saved = false;
+	private double percentPlayed;
+	
+	private int progress;
 
 	@Override
 	public void setParentName(String string) {
@@ -149,6 +174,27 @@ public class Cast extends Podcast implements Serializable {
 	public String getParentName() {
 		// TODO Auto-generated method stub
 		return this.parentName;
+	}
+	
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel arg0, int arg1) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public double getPercentPlayed() {
+		// TODO Auto-generated method stub
+		return percentPlayed;
+	}
+	
+	public int getProgress() {
+		return progress;
 	}
 
 }

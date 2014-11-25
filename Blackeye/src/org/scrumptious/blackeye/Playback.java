@@ -15,12 +15,14 @@ public class Playback {
 		mediaPlayer = new MediaPlayer();
 	}
 	
-	public void playAudio(String url) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
-		
-	    
+	
+	public void playToResume(int position) {
+		mediaPlayer.seekTo(position);
+	    mediaPlayer.start();
 	}
 	
 	public void stop() {
+		mediaPlayer.pause();
 		mediaPlayer.stop();
 	}
 	
@@ -34,10 +36,23 @@ public class Playback {
 	public void pause() {
 		// TODO Auto-generated method stub
 		mediaPlayer.pause();
+		System.out.println(mediaPlayer.getCurrentPosition());
 	}
 	
 	public void resume() {
 		mediaPlayer.start();
+		System.out.println(mediaPlayer.getCurrentPosition());
+	}
+	
+	public double getPercentPlayed() {
+		double position = mediaPlayer.getCurrentPosition();
+		double totalDuration = mediaPlayer.getDuration();
+		System.out.println(position/totalDuration);
+		return position/totalDuration;
+	}
+	
+	public int getPosition() {
+		return mediaPlayer.getCurrentPosition();
 	}
 	
 	public MediaPlayer getPlayer() {
